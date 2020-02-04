@@ -162,7 +162,7 @@ void hidLoop(void *args) {
         }
 
         // Detect overlay key-combo
-        if ((shData->keysHeld & (KEY_L | KEY_DDOWN)) == (KEY_L | KEY_DDOWN) && shData->keysDown & KEY_RSTICK) {
+        if ((shData->keysHeld & (KEY_ZL | KEY_ZR)) == (KEY_ZL | KEY_ZR) && shData->keysDown & KEY_PLUS) {
             if (shData->overlayOpen) {
                 if (tsl::Overlay::getCurrentOverlay() != nullptr && tsl::Gui::getCurrentGui() != nullptr)
                     tsl::Overlay::getCurrentOverlay()->onOverlayHide(tsl::Gui::getCurrentGui());
