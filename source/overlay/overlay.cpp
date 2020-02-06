@@ -219,11 +219,17 @@ int main(int argc, char** argv) {
             gui->preDraw(screen);
 
             tsl::Gui::hidUpdate(shData.keysDown, shData.keysHeld, shData.joyStickPosLeft, shData.joyStickPosRight, shData.touchX, shData.touchY);
-            tsl::Gui::tick();
-            gui = tsl::Gui::getCurrentGui();
 
+            tsl::Overlay::startFrameTimer();
+
+            tsl::Gui::guiChange();
+            gui = tsl::Gui::getCurrentGui();
             if (gui == nullptr)
                 break;
+            gui->update(shData.keysDown, shData.keysHeld, shData.joyStickPosLeft, shData.joyStickPosRight, shData.touchX, shData.touchY);
+            tsl::Gui::draw();
+
+            tsl::Overlay::waitFrameEnd();
 
             gui->postDraw(screen);
 
