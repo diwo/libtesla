@@ -22,6 +22,7 @@
 
 #include <memory>
 #include <vector>
+#include <chrono>
 #include <thread>
 
 #include "overlay/screen.hpp"
@@ -29,6 +30,8 @@
 
 namespace tsl {
 
+    using namespace std::literals::chrono_literals;
+    
     using Element = element::Element;
     static auto &a = tsl::Screen::a;
 
@@ -47,7 +50,7 @@ namespace tsl {
         virtual bool shouldClose();
 
         virtual Element* createUI() = 0;
-        virtual void update(s64 keysDown, s64 keysHeld, JoystickPosition joyStickPosLeft, JoystickPosition joyStickPosRight, u32 touchX, u32 touchY) {}
+        virtual void update() {}
         
         virtual void preDraw(Screen *screen) {
             screen->fillScreen(a({ 0x0, 0x0, 0x0, 0xD }));
@@ -61,9 +64,8 @@ namespace tsl {
 
         virtual void postDraw(Screen *screen) {} 
 
+        static void tick();
         static void hidUpdate(s64 keysDown, s64 keysHeld, JoystickPosition joyStickPosLeft, JoystickPosition joyStickPosRight, u32 touchX, u32 touchY);
-        static void guiChange();
-        static void draw();
 
         static void playIntroAnimation();
         static void playOutroAnimation();
@@ -98,6 +100,10 @@ namespace tsl {
 
         static bool isFocused(Element *element) { return Gui::s_focusedElement == element; }
 
+        static auto getLastFrameTime() {
+            return std::chrono::duration_cast<std::chrono::duration<u64, std::milli>>(Gui::s_lastFrameDuration);
+        }
+
         static void setOpacity(float opacity) {
             Gui::s_screen->setOpacity(opacity);
         }
@@ -120,6 +126,8 @@ namespace tsl {
 
         static inline bool s_shouldHide = false;
         static inline bool s_shouldClose  = false;
+
+        static inline std::chrono::duration<s64, std::nano> s_lastFrameDuration = 0s;
 
         static inline std::vector<Gui*> s_previousGuis;
     };
